@@ -1,7 +1,6 @@
 package org.itzheng.demo.rectanglecamera;
 
 import android.app.Activity;
-import android.app.Application;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,23 +13,22 @@ import java.util.Calendar;
  * 加速度控制器  用来控制对焦
  */
 public class SensorControler implements SensorEventListener {
-    public static final String TAG = "SensorControler";
-    public static final int DELEY_DURATION = 500;
+    private static final String TAG = "SensorControler";
+    public static final int DELAY_DURATION = 500;
     public static final int STATUS_NONE = 0;
     public static final int STATUS_STATIC = 1;
     public static final int STATUS_MOVE = 2;
     private static SensorControler mInstance;
-    Calendar mCalendar;
-    boolean isFocusing = false;
-    boolean canFocusIn = false;  //内部是否能够对焦控制机制
-    boolean canFocus = false;
+    private boolean isFocusing = false;
+    private boolean canFocusIn = false;  //内部是否能够对焦控制机制
+    private boolean canFocus = false;
     private SensorManager mSensorManager;
     private Sensor mSensor;
     private int mX, mY, mZ;
     private long lastStaticStamp = 0;
     private int STATUE = STATUS_NONE;
     private CameraFocusListener mCameraFocusListener;
-    private int foucsing = 1;  //1 表示没有被锁定 0表示被锁定
+    private int focusing = 1;  //1 表示没有被锁定 0表示被锁定
 
     private SensorControler() {
         mSensorManager = (SensorManager) App.getInstance().getSystemService(Activity.SENSOR_SERVICE);
@@ -84,7 +82,7 @@ public class SensorControler implements SensorEventListener {
             int x = (int) event.values[0];
             int y = (int) event.values[1];
             int z = (int) event.values[2];
-            mCalendar = Calendar.getInstance();
+            Calendar mCalendar = Calendar.getInstance();
             long stamp = mCalendar.getTimeInMillis();// 1393844912
 
             int second = mCalendar.get(Calendar.SECOND);// 53
@@ -110,7 +108,7 @@ public class SensorControler implements SensorEventListener {
                     }
 
                     if (canFocusIn) {
-                        if (stamp - lastStaticStamp > DELEY_DURATION) {
+                        if (stamp - lastStaticStamp > DELAY_DURATION) {
                             //移动后静止一段时间，可以发生对焦行为
                             if (!isFocusing) {
                                 canFocusIn = false;
@@ -151,7 +149,7 @@ public class SensorControler implements SensorEventListener {
      */
     public boolean isFocusLocked() {
         if (canFocus) {
-            return foucsing <= 0;
+            return focusing <= 0;
         }
         return false;
     }
@@ -161,7 +159,7 @@ public class SensorControler implements SensorEventListener {
      */
     public void lockFocus() {
         isFocusing = true;
-        foucsing--;
+        focusing--;
         Log.i(TAG, "lockFocus");
     }
 
@@ -170,12 +168,12 @@ public class SensorControler implements SensorEventListener {
      */
     public void unlockFocus() {
         isFocusing = false;
-        foucsing++;
+        focusing++;
         Log.i(TAG, "unlockFocus");
     }
 
     public void restFoucs() {
-        foucsing = 1;
+        focusing = 1;
     }
 
     public interface CameraFocusListener {
