@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
@@ -22,7 +21,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -36,7 +34,7 @@ public class CameraActivity extends AppCompatActivity {
     public static final String EXTRA_STR_FILE_PATH = "EXTRA_STR_FILE_PATH";
     LinearLayout llFocus;
     Rect mRect = new Rect();
-    SensorControler sensorControler;
+    SensorController sensorControler;
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
     private Camera mCamera;
@@ -124,9 +122,9 @@ public class CameraActivity extends AppCompatActivity {
         //设置全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        sensorControler = SensorControler.getInstance();
+        sensorControler = SensorController.getInstance();
         initView();
-        sensorControler.setCameraFocusListener(new SensorControler.CameraFocusListener() {
+        sensorControler.setCameraFocusListener(new SensorController.CameraFocusListener() {
             @Override
             public void onFocus() {
                 Log.d(TAG, "onFocus");
